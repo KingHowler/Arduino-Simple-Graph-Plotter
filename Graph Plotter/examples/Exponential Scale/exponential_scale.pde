@@ -7,9 +7,10 @@ void setup() {
   
   GP = new GraphPlotter();
   GP.GraphSetup(false, true, "", "");
-  GP.GridSetup(log(1), log(50), 1, 0, 50, 10);
-  GP.totalPoints *= 1;
+  GP.GridSetup(0, 100, 10, 0, 5, 1);
+  GP.totalPoints *= 10;
   GP.SizeSetup(width, height);
+  GP.scale = "lnx";
   
   DataArray = new float[GP.totalPoints];
   
@@ -18,12 +19,15 @@ void setup() {
 
 void draw() {
   GP.fillBackground(color(255));
-  GP.DrawGraph(DataArray, color(0, 0, 128));
+  //GP.DrawGraph(DataArray, color(0, 120, 198));
   GP.DrawGrid();
 }
 
 void fillData() {
   for(int i = 0; i < GP.totalPoints; i++) {
-    DataArray[i] = log(GP.x(i));
+    DataArray[i] = GP.x(i);
+    if(DataArray[i] == 0) {
+      DataArray[1] = 10;
+    }
   }
 }

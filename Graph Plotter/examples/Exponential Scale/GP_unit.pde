@@ -19,6 +19,8 @@ public class GraphPlotter {
     private int HeightP;
     private int OffsetX = 0;
     private int OffsetY = 0;
+    
+    public String scale = "Norm";
 
     // Setup General Control Methods
     // Setup Graph Plotter Settings
@@ -63,66 +65,103 @@ public class GraphPlotter {
     // Draw the Grid
     void DrawGrid() {
         // draw SubGrid
-        if (SubGrid) {
-
-            // Y sub grid
-            for (float i = XMin; i < XMax; i+= XStep/10) {
-                // Map each x value to a coordinate
-                int x = int(map(i, XMin, XMax, 100, WidthP - 50));
-
-                // Draw Vertical Line
-                strokeWeight(0.5);
-                stroke(200);  // Light gray color for subgrid
-                line((x) + OffsetX, (HeightP - 50) + OffsetY, (x) + OffsetX, (50) + OffsetY);
+          if (SubGrid) {
+              // Y sub grid
+              for (float i = XMin; i < XMax; i+= XStep/10) {
+                  float sc;
+                  switch(scale) {
+                    case "lnX": sc = exp(i);
+                    break;
+                    case "log10X": sc = i;
+                    break;
+                    default: sc = i;
+                    break;
+                  }
+                  // Map each x value to a coordinate
+                  float x = map(sc, XMin, XMax, 100, WidthP - 50);
+  
+                  // Draw Vertical Line
+                  strokeWeight(0.5);
+                  stroke(200);  // Light gray color for subgrid
+                  line((x) + OffsetX, (HeightP - 50) + OffsetY, (x) + OffsetX, (50) + OffsetY);
+              }
+              
+              // X sub grid
+              for (float i = YMin; i < YMax; i+= YStep/10) {
+                  float sc;
+                  switch(scale) {
+                    case "lnY": sc = exp(i);
+                    break;
+                    case "log10Y": sc = i;
+                    break;
+                    default: sc = i;
+                    break;
+                  }
+                  // Map each y value to a coordinate
+                  float y = map(sc, YMin, YMax, HeightP - 50, 50);
+  
+                  // Draw Horizontal Line
+                  strokeWeight(0.5);
+                  stroke(200);  // Light gray color for subgrid
+                  line((100) + OffsetX, (y) + OffsetY, (WidthP - 50) + OffsetX, (y) + OffsetY);
+              }
+          }
+          // Draw Main Grid
+          // Y grid
+          for (float i = XMin; i < XMax + 1; i+= XStep) {
+              float sc;
+                  switch(scale) {
+                    case "lnX": sc = exp(i);
+                    break;
+                    case "log10X": sc = i;
+                    break;
+                    default: sc = i;
+                    break;
+                  }
+              // Map each x value to a coordinate
+              float x = map(sc, XMin, XMax, 100, WidthP - 50);
+  
+              // Draw Vertical Line
+              strokeWeight(1.5);
+              stroke(160);  // Dark gray color for grid
+              line((x) + OffsetX, (HeightP - 50) + OffsetY, (x) + OffsetX, (50) + OffsetY);
+  
+              // Display value of current x coordinate on the horizontal axis
+              textAlign(CENTER);
+              fill(0);
+              if (i != 0 ) {  // Don't rewrite 0 on top of 0
+                  text(String.valueOf(i), (x) + OffsetX, (HeightP - 30) + OffsetY);
+              }
+          }
+  
+          // X Grid
+          for (float i = YMin; i < YMax + 1; i+= YStep) {
+            float sc;
+            switch(scale) {
+              case "lnY": sc = exp(i);
+              break;
+              case "log10Y": sc = i;
+              break;
+              default: sc = i;
+              break;
             }
-            
-            // X sub grid
-            for (float i = YMin; i < YMax; i+= YStep/10) {
-                // Map each y value to a coordinate
-                int y = int(map(i, YMin, YMax, HeightP - 50, 50));
-
-                // Draw Horizontal Line
-                strokeWeight(0.5);
-                stroke(200);  // Light gray color for subgrid
-                line((100) + OffsetX, (y) + OffsetY, (WidthP - 50) + OffsetX, (y) + OffsetY);
-            }
-        }
-        // Draw Main Grid
-        // Y grid
-        for (float i = XMin; i < XMax + 1; i+= XStep) {
-            // Map each x value to a coordinate
-            int x = int(map(i, XMin, XMax, 100, WidthP - 50));
-
-            // Draw Vertical Line
-            strokeWeight(1.5);
-            stroke(160);  // Dark gray color for grid
-            line((x) + OffsetX, (HeightP - 50) + OffsetY, (x) + OffsetX, (50) + OffsetY);
-
-            // Display value of current x coordinate on the horizontal axis
-            textAlign(CENTER);
-            fill(0);
-            if (i != 0 ) {  // Don't rewrite 0 on top of 0
-                text(String.valueOf(i), (x) + OffsetX, (HeightP - 30) + OffsetY);
-            }
-        }
-
-        // X Grid
-        for (float i = YMin; i < YMax; i+= YStep) {
             // Map each y value to a coordinate
-            int y = int(map(i, YMin, YMax, HeightP - 50, 50));
-
-            // Draw Horizontal Line
-            strokeWeight(1.5);
-            stroke(160);  // Dark gray color for grid
-            line((100) + OffsetX, (y) + OffsetY, (WidthP - 50) + OffsetX, (y) + OffsetY);
-
-            // Display value of current y coordinate on the vertical axis
-            textAlign(RIGHT);
-            fill(0);
-            if (i != 0 ) {  // Don't rewrite 0 on top of 0
-                text(String.valueOf(i), (90) + OffsetX, (y) + OffsetY);
+            float y = map(sc, YMin, YMax, HeightP - 50, 50);
+              
+            if (y <= HeightP - 50 && y >= 50) {
+              // Draw Horizontal Line
+              strokeWeight(1.5);
+              stroke(160);  // Dark gray color for grid
+              line((100) + OffsetX, (y) + OffsetY, (WidthP - 50) + OffsetX, (y) + OffsetY);
+    
+              // Display value of current y coordinate on the vertical axis
+              textAlign(RIGHT);
+              fill(0);
+              if (i != 0 ) {  // Don't rewrite 0 on top of 0
+                  text(String.valueOf(i), (90) + OffsetX, (y) + OffsetY);
+              }
             }
-        }
+          }
 
         // Drawing the axes
         stroke(0); 
@@ -157,17 +196,32 @@ public class GraphPlotter {
         float X2 = 0;
         float Y1 = 0;
         float Y2 = 0;
+        float x1 = 0;
+        float x2 = 0;
+        float y1 = 0;
+        float y2 = 0;
         boolean drawPoints = Points;
 
         // Get coordinate of current value
-        float x1 = map(i, 0, totalPoints - 1, 100, WidthP - 50);
-        //float y1 = map(graph[i], YMin, YMax, HeightP - 50, 50);
-        float y1 = yCo(graph[i]);
-
-        // Get coordinate of next value
-        float x2 = map(i + 1, 0, totalPoints - 1, 100, WidthP - 50);
-        //float y2 = map(graph[i + 1], YMin, YMax, HeightP - 50, 50);
-        float y2 = yCo(graph[i + 1]);
+        if (scale == "lnY") {
+          x1 = map(i, 0, totalPoints - 1, 100, WidthP - 50);
+          //float y1 = map(graph[i], YMin, YMax, HeightP - 50, 50);
+          y1 = yCo(exp(graph[i]));
+  
+          // Get coordinate of next value
+          x2 = map(i + 1, 0, totalPoints - 1, 100, WidthP - 50);
+          //float y2 = map(graph[i + 1], YMin, YMax, HeightP - 50, 50);
+          y2 = yCo(exp(graph[i + 1]));
+        } else {
+          x1 = map(i, 0, totalPoints - 1, 100, WidthP - 50);
+          //float y1 = map(graph[i], YMin, YMax, HeightP - 50, 50);
+          y1 = yCo(graph[i]);
+  
+          // Get coordinate of next value
+          x2 = map(i + 1, 0, totalPoints - 1, 100, WidthP - 50);
+          //float y2 = map(graph[i + 1], YMin, YMax, HeightP - 50, 50);
+          y2 = yCo(graph[i + 1]);
+        }
         
         // Calculate Gradient for filtering lines
         float m = (y2 - y1) / (x2 - x1);
