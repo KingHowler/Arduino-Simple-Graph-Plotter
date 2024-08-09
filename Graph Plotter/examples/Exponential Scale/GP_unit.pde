@@ -212,6 +212,15 @@ public class GraphPlotter {
           x2 = map(i + 1, 0, totalPoints - 1, 100, WidthP - 50);
           //float y2 = map(graph[i + 1], YMin, YMax, HeightP - 50, 50);
           y2 = yCo(exp(graph[i + 1]));
+        } if (scale == "lnX") {
+          x1 = xCo(exp(i));
+          //float y1 = map(graph[i], YMin, YMax, HeightP - 50, 50);
+          y1 = yCo(graph[i]);
+  
+          // Get coordinate of next value
+          x2 = xCo(exp(i + 1));
+          //float y2 = map(graph[i + 1], YMin, YMax, HeightP - 50, 50);
+          y2 = yCo(graph[i + 1]);
         } else {
           x1 = map(i, 0, totalPoints - 1, 100, WidthP - 50);
           //float y1 = map(graph[i], YMin, YMax, HeightP - 50, 50);
