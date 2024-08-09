@@ -6,8 +6,8 @@ public class GraphPlotter {
     private String YTitle;    // Title for the Y-axis
 
     // Grid Variables
-    private int YMin;
-    private int YMax;
+    private float YMin;
+    private float YMax;
     private float YStep;
     private int XMin;
     private int XMax;
@@ -30,7 +30,7 @@ public class GraphPlotter {
     }
 
     // Setup Grid
-    void GridSetup(int yMin, int yMax, float yStep, int xMin, int xMax, float xStep) {
+    void GridSetup(float yMin, float yMax, float yStep, int xMin, int xMax, float xStep) {
         YMin = yMin;
         YMax = yMax;
         YStep = yStep;
@@ -107,7 +107,7 @@ public class GraphPlotter {
         }
 
         // X Grid
-        for (float i = YMin; i < YMax + 1; i+= YStep) {
+        for (float i = YMin; i < YMax; i+= YStep) {
             // Map each y value to a coordinate
             int y = int(map(i, YMin, YMax, HeightP - 50, 50));
 
